@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Services;
+
+use App\Repositories\Interfaces\BaseRepositoryInterface;
+use App\Services\Interfaces\BaseServiceInterface;
+
+class BaseService implements BaseServiceInterface
+{
+    /**
+     * @var Model
+     */
+    protected $repository;
+
+    /**
+     * BaseService constructor.
+     *
+     * @param BaseRepositoryInterface $repository
+     */
+    public function __construct(BaseRepositoryInterface $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Get list
+     *
+     * @param array $filter
+     * @param ?object $pagination
+     * @param ?array $orderBy
+     * @return \Illuminate\Database\Eloquent\Model[]
+     */
+    public function list(array $filter = [], ?object $pagination = null, ?array $orderBy = null): object
+    {
+        return $this->repository->list($filter, $pagination, $orderBy);
+    }
+
+    /**
+     * Get query
+     *
+     * @param array $filter
+     * @param ?object $pagination
+     * @param ?array $orderBy
+     * @return \Illuminate\Database\Eloquent\Model[]
+     */
+    public function query(array $filter = [], ?object $pagination = null, ?array $orderBy = null): object
+    {
+        return $this->repository->query($filter, $pagination, $orderBy);
+    }
+
+    /**
+     * Get By Id
+     *
+     * @param number $id
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function get(int $id): object
+    {
+        return $this->repository->get($id);
+    }
+
+    /**
+     * Save
+     *
+     * @param array $data
+     * @param ?number $id
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function save(array $data, ?int $id = null): object
+    {
+        return $this->repository->save($data, $id);
+    }
+
+    /**
+     * Delete
+     *
+     * @param number $id
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function delete(int $id): object
+    {
+        return $this->repository->delete($id);
+    }
+}
