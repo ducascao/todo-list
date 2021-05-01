@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 ApiMaker::routes();
 
 /** API Maker: Routes */
+Route::apiResource('task-items', App\Http\Controllers\TaskItemController::class);
+Route::apiResource('tasks', App\Http\Controllers\TaskController::class);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
