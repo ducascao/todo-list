@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Facades\TaskItem;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
@@ -10,4 +11,9 @@ class Task extends Model
         'description',
         'user_id',
     ];
+
+    public function items()
+    {
+        return $this->hasMany(TaskItem::class);
+    }
 }

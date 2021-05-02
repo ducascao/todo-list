@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Facades\Task;
+use App\Facades\TaskItem;
 use Illuminate\Http\Request;
 
 class TaskController
@@ -30,5 +31,10 @@ class TaskController
     public function destroy(int $id)
     {
         Task::delete($id);
+    }
+
+    public function getItems(int $id)
+    {
+        return TaskItem::query(['task_id' => $id])->get();
     }
 }

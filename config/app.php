@@ -178,7 +178,6 @@ return [
         App\Providers\JetstreamServiceProvider::class,
         App\Providers\DomainServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
-
     ],
 
     /*
