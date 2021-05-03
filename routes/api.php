@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 ApiMaker::routes();
 
 /** API Maker: Routes */
-// Route::apiResource('task-items', App\Http\Controllers\TaskItemController::class);
+Route::apiResource('task-items', App\Http\Controllers\TaskItemController::class);
 // Route::apiResource('tasks', App\Http\Controllers\TaskController::class);
 
 Route::group(['prefix' => 'tasks'], function () {
@@ -30,6 +30,7 @@ Route::group(['prefix' => 'tasks'], function () {
     Route::get('/{id}/items', [TaskController::class, 'getItems']);
 });
 
+Route::get('user/{id}/tasks', [TaskController::class, 'getTasksByUser']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

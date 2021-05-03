@@ -37,4 +37,9 @@ class TaskController
     {
         return TaskItem::query(['task_id' => $id])->get();
     }
+
+    public function getTasksByUser(Int $id)
+    {
+        return Task::query(['user_id' => $id])->with('items')->get();
+    }
 }

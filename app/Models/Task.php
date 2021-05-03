@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Facades\TaskItem;
+use App\Models\TaskItem;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model

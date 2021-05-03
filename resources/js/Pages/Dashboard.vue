@@ -2,28 +2,43 @@
     <app-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Dashboard
+                Tarefas
             </h2>
         </template>
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <welcome />
-                </div>
-            </div>
+        <div class="p-1">
+            <tasks :tasks="userTasks" />
         </div>
     </app-layout>
 </template>
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
-    import Welcome from '@/Jetstream/Welcome'
+    import Tasks from '@/Pages/Tasks'
 
     export default {
         components: {
             AppLayout,
-            Welcome,
+            Tasks,
         },
+        data() {
+            return {
+                userTasks: []
+            }
+        },
+        methods: {
+            getUserTasks() {
+                axios.get('api/user/1/tasks')
+                .then(response => {
+                    this.userTasks = response.data
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+            }
+        },
+        mounted() {
+            this.getUserTasks();
+        }
     }
 </script>
