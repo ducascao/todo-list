@@ -23,8 +23,10 @@ Route::apiResource('task-items', App\Http\Controllers\TaskItemController::class)
 
 Route::group(['prefix' => 'tasks'], function () {
     Route::get('/', [TaskController::class, 'index']);
+    Route::get('/share/{code}', [TaskController::class, 'getTaskByShareCode']);
     Route::post('/', [TaskController::class, 'store']);
     Route::put('/{id}', [TaskController::class, 'update']);
+    Route::put('/{id}/share', [TaskController::class, 'sendSharedCode']);
     Route::delete('/{id}', [TaskController::class, 'destroy']);
 
     Route::get('/{id}/items', [TaskController::class, 'getItems']);

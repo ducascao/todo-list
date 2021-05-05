@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Facades\Task;
 use App\Facades\TaskItem;
+use App\Mail\ShareTask;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class TaskController
 {
@@ -41,5 +45,33 @@ class TaskController
     public function getTasksByUser(Int $id)
     {
         return Task::query(['user_id' => $id])->with('items')->get();
+    }
+
+    public function getTaskByShareCode(String $code)
+    {
+        return Task::query(['share_code' => $code])->with('items')->get();
+    }
+
+    public function verifySharedCode(String $code)
+    {
+        $searchTask = Task::query(['share_code' => $code])->with('items')->get();
+
+        if ($searchTask) {
+            return Inertia::render('SharedTask', [
+                'code' => $code
+            ]); 
+        }
+    }
+
+    public function sendSharedCode(Request $request, $id)
+    {
+        $emails = explode(',', $request->emails);
+
+        $shareCode = Str::random(32);
+        Task::save(['share_code' => $shareCode], $id);
+
+        foreach ($emails as $email) {
+            Mail::to(trim($email))->send(new ShareTask($shareCode));   
+        }
     }
 }
