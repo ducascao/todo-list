@@ -7,6 +7,7 @@
                     name="edit" 
                     v-bind:class="'text-yellow-500'" 
                     style="cursor:pointer" 
+                    placeholder="informe a descrição da tarefa e tecle enter"
                     @click="enableTitleEdit()" />
             </span>
             <div v-else>
@@ -30,8 +31,8 @@
                 <input 
                     type="text" 
                     class="w-full"
-                    placeholder="informe a descrição do item"
-                    v-on:keyup.enter="addItem(task.id, $event)" />
+                    placeholder="informe a descrição do item e tecle enter"
+                    v-on:keyup.enter="addItem($event)" />
             </div>
         </div>
     </div>
@@ -64,19 +65,18 @@
             editTask(id, e) {
                 let description = e.target.value
 
-                axios.put(`${this.baseUrl}/api/tasks/${id}`, { description })
+                axios.put(`${this.baseUrl}/api/tasks/share/${this.code}`, { description })
                 .finally(() => {
+                    this.refreshTasks()
                     this.enableTitleEdit()
                 })
             },
-            addItem(id, event) {
+            addItem(event) {
                 let data = {
-                    description: event.target.value,
-                    task_id: id,
-                    done: 0
+                    description: event.target.value
                 }
                 
-                axios.post(`${this.baseUrl}/api/task-items`, data)
+                axios.post(`${this.baseUrl}/api/tasks/share/${this.code}/item`, data)
                 .finally(() => {
                     this.refreshTasks()
                 })
@@ -85,7 +85,7 @@
                 let id = e.target.value
                 let checked = e.target.checked
 
-                axios.put(`${this.baseUrl}/api/task-items/${id}`, {
+                axios.put(`${this.baseUrl}/api/tasks/share/item/${id}`, {
                     done: checked
                 })
                 .finally(() => {

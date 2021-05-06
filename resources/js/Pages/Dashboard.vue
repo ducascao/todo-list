@@ -1,11 +1,5 @@
 <template>
     <app-layout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Tarefas
-            </h2>
-        </template>
-
         <div class="max-w-7xl p-1 mx-auto sm:px-6 lg:px-8">
             <tasks  />
         </div>

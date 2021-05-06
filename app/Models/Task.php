@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Models\TaskItem;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'description',
         'user_id',

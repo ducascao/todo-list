@@ -15,4 +15,9 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface
     {
         parent::__construct($model);
     }
+
+    public function restoreData()
+    {
+        $this->model->onlyTrashed()->restore();
+    }
 }

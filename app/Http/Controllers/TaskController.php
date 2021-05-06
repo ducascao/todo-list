@@ -37,6 +37,11 @@ class TaskController
         Task::delete($id);
     }
 
+    public function restoreTasks()
+    {
+        Task::restoreData();
+    }
+
     public function getItems(int $id)
     {
         return TaskItem::query(['task_id' => $id])->get();

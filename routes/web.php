@@ -27,6 +27,21 @@ Route::get('/', function () {
     ]);
 });
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/tasks', [TaskController::class, 'index']);
+    Route::get('/tasks/share/{code}', [TaskController::class, 'getTaskByShareCode']);
+    Route::post('/tasks', [TaskController::class, 'store']);
+    Route::put('/tasks/{id}', [TaskController::class, 'update']);
+    Route::put('/tasks/{id}/share', [TaskController::class, 'sendSharedCode']);
+    Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);
+
+    Route::get('/tasks/{id}/items', [TaskController::class, 'getItems']);
+});
+
+Route::apiResource('task-items', App\Http\Controllers\TaskItemController::class);
+
+Route::middleware('auth:sanctum')->get('user/{id}/tasks', [TaskController::class, 'getTasksByUser']);
+
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');

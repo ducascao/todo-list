@@ -10,10 +10,15 @@ class TaskService extends BaseService implements TaskServiceInterface
     /**
      * TaskService constructor
      *
-     * @param TaskRepositoryInterface $taskserviceRepository
+     * @param TaskRepositoryInterface $taskServiceRepository
      */
-    public function __construct(TaskRepositoryInterface $taskserviceRepository)
+    public function __construct(TaskRepositoryInterface $taskServiceRepository)
     {
-        parent::__construct($taskserviceRepository);
+        parent::__construct($taskServiceRepository);
+    }
+
+    public function restoreData()
+    {
+        $this->repository->restoreData();
     }
 }

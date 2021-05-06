@@ -1,21 +1,42 @@
 <template>
     <div>
-        <div class="grid grid-cols-2">
-            <div class="bg-white p-2 m-2 rounded-md shadow-lg" v-for="(task, taskIndex) in tasks" @dragover.prevent @drop="dropItem(task.id, $event)">
-                <span v-show="!showShareInput">
-                    <span class="font-bold" v-if="!showEditTask">
+        <div class="grid grid-cols-1">
+            <span class="font-bold" v-show="showShareInput">
+                <!-- Compartilhar tarefa -->
+                <div class="bg-white p-2 m-2 rounded-md shadow-lg">
+                    Compartilhar lista
+                    <input 
+                        type="text" 
+                        class="w-full"
+                        placeholder="informe os emails separados por ',' e pressione Enter"
+                        v-on:keyup.enter="sendSharedTask($event)" />
+                </div>
+            </span>
+            <span class="font-bold" v-show="showEditTask">
+                <div class="bg-white p-2 m-2 rounded-md shadow-lg">
+                    Editar o título da lista
+                    <input 
+                        type="text" 
+                        class="w-full" 
+                        placeholder="informe o novo título da lista e pressione Enter"
+                        v-on:keyup.enter="editTask($event)" />
+                </div>
+            </span>
+            <span v-show="!showShareInput && !showEditTask">
+                <div class="bg-white p-2 m-2 rounded-md shadow-lg" v-for="(task, taskIndex) in tasks" @dragover.prevent @drop="dropItem(task.id, $event)">
+                    <span class="font-bold">
                         {{ task.description }}
                         <Icon 
                             name="share" 
                             v-bind:class="'text-green-500'" 
                             style="cursor:pointer" 
-                            @click="enableShareInput()" />
+                            @click="enableShareInput(task.id)" />
 
                         <Icon 
                             name="edit" 
                             v-bind:class="'text-yellow-500'" 
                             style="cursor:pointer" 
-                            @click="enableTitleEdit()" />
+                            @click="enableTitleEdit(task.id)" />
 
                         <Icon 
                             name="trash" 
@@ -23,9 +44,6 @@
                             style="cursor:pointer" 
                             @click="deleteTask(task.id)" />
                     </span>
-                    <div v-else>
-                        <input type="text" class="w-full" v-on:keyup.enter="editTask(task.id, $event)" />
-                    </div>
                     <div :id="item.id" class="font-thin" v-for="(item, itemIndex) in task.items" v-bind:class="item.done && 'line-through'" @dragstart="dragStart($event)" draggable="true">
                         <input 
                             type="checkbox" 
@@ -47,35 +65,25 @@
                             placeholder="informe a descrição do item e pressione Enter"
                             v-on:keyup.enter="addItem(task.id, $event)" />
                     </div>
-                </span>
-                <span v-show="showShareInput">
-                    <!-- Compartilhar tarefa -->
+                </div>
+                <div class="p-2 m-2" v-if="!showNewTask">
+                    <Icon 
+                        name="plus-circle"
+                        v-bind:class="'text-green-500 text-6xl'"
+                        style="cursor:pointer"
+                        @click="enableAddTask()" />
+                </div>
+                <div class="bg-white p-2 m-2 rounded-md shadow-lg" v-else>
+                    <!-- Nova tarefa -->
                     <div>
                         <input 
                             type="text" 
                             class="w-full"
-                            placeholder="informe os emails separados por ',' e pressione Enter"
-                            v-on:keyup.enter="sendSharedTask(task.id, $event)" />
+                            placeholder="Informe o título da tarefa e pressione Enter"
+                            v-on:keyup.enter="addTask($event)" />
                     </div>
-                </span>
-            </div>
-            <div class="p-2 m-2" v-if="!showNewTask">
-                <Icon 
-                    name="plus-circle"
-                    v-bind:class="'text-green-500 text-6xl'"
-                    style="cursor:pointer"
-                    @click="enableAddTask()" />
-            </div>
-            <div class="bg-white p-2 m-2 rounded-md shadow-lg" v-else>
-                <!-- Nova tarefa -->
-                <div>
-                    <input 
-                        type="text" 
-                        class="w-full"
-                        placeholder="Informe o título da tarefa e pressione Enter"
-                        v-on:keyup.enter="addTask($event)" />
                 </div>
-            </div>
+            </span>
         </div>
     </div>
 </template>
@@ -93,12 +101,13 @@
                 showEditTask: false,
                 showNewTask: false,
                 showShareInput: false,
-                tasks: []
+                tasks: [],
+                targetId: null
             }
         },
         methods: {
             getTasks() {
-                axios.get(`api/user/${this.userId}/tasks`)
+                axios.get(`user/${this.userId}/tasks`)
                 .then(response => {
                     this.tasks = response.data
                 })
@@ -110,26 +119,29 @@
                 let description = e.target.value
                 let user_id = this.userId
 
-                axios.post('api/tasks', { description, user_id })
+                axios.post('tasks', { description, user_id })
                 .finally(() => {
                     this.getTasks()
                     this.enableAddTask()
                 })
             },
-            enableTitleEdit() {
+            enableTitleEdit(id) {
+                this.targetId = id
                 this.showEditTask = !this.showEditTask;
+
+                console.log(this.targetId, this.showEditTask)
             },
-            editTask(id, e) {
+            editTask(e) {
                 let description = e.target.value
 
-                axios.put(`api/tasks/${id}`, { description })
+                axios.put(`tasks/${this.targetId}`, { description })
                 .finally(() => {
                     this.getTasks()
-                    this.enableTitleEdit()
+                    this.enableTitleEdit(null)
                 })
             },
             deleteTask(id) {
-                axios.delete(`api/tasks/${id}`)
+                axios.delete(`tasks/${id}`)
                 .finally(() => {
                     this.getTasks()
                 })
@@ -141,7 +153,7 @@
                     done: 0
                 }
                 
-                axios.post('api/task-items', data)
+                axios.post('task-items', data)
                 .finally(() => {
                     this.getTasks()
                 })
@@ -150,7 +162,7 @@
                 let id = e.target.value
                 let checked = e.target.checked
 
-                axios.put(`api/task-items/${id}`, {
+                axios.put(`task-items/${id}`, {
                     done: checked
                 })
                 .finally(() => {
@@ -159,20 +171,21 @@
                 })
             },
             removeItem(id) {
-                axios.delete(`api/task-items/${id}`)
+                axios.delete(`task-items/${id}`)
                 .finally(() => {
                     this.getTasks()
                 })
             },
-            enableShareInput() {
+            enableShareInput(id) {
+                this.targetId = id
                 this.showShareInput = !this.showShareInput;
             },
-            sendSharedTask(id, event) {
+            sendSharedTask(event) {
                 let emails = event.target.value
 
-                axios.put(`api/tasks/${id}/share`, { emails })
+                axios.put(`tasks/${this.targetId}/share`, { emails })
                 .finally(() => {
-                    this.enableShareInput()
+                    this.enableShareInput(null)
                 })
             },
             dragStart(event) {
@@ -181,10 +194,13 @@
             dropItem(task_id, event) {
                 let itemId = event.dataTransfer.getData('id')
                 
-                axios.put(`api/task-items/${itemId}`, { task_id })
+                axios.put(`task-items/${itemId}`, { task_id })
                 .finally(() => {
                     this.getTasks()
                 })
+            },
+            dropItemOut(event) {
+                console.log(event)
             }
         },
         mounted() {
