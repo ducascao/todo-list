@@ -456,16 +456,16 @@
         },
         {
             "name": "ducascao/api-maker",
-            "version": "v0.1.1",
+            "version": "v0.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ducascao/api-maker.git",
-                "reference": "2f83992c02eaf82a6875add49b0510eefd92de87"
+                "reference": "f47349ab6415d68721ed519a2f5d0170ac5c443c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ducascao/api-maker/zipball/2f83992c02eaf82a6875add49b0510eefd92de87",
-                "reference": "2f83992c02eaf82a6875add49b0510eefd92de87",
+                "url": "https://api.github.com/repos/ducascao/api-maker/zipball/f47349ab6415d68721ed519a2f5d0170ac5c443c",
+                "reference": "f47349ab6415d68721ed519a2f5d0170ac5c443c",
                 "shasum": ""
             },
             "require": {
@@ -510,9 +510,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ducascao/api-maker/issues",
-                "source": "https://github.com/ducascao/api-maker/tree/v0.1.1"
+                "source": "https://github.com/ducascao/api-maker/tree/v0.1.2"
             },
-            "time": "2021-02-19T15:55:35+00:00"
+            "time": "2021-05-01T02:20:06+00:00"
         },
         {
             "name": "egulias/email-validator",
