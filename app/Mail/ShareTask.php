@@ -30,7 +30,8 @@ class ShareTask extends Mailable
      */
     public function build()
     {
-        $url = url('http://localhost/shared-task/'.$this->code);
+        $baseUrl = env('APP_URL');
+        $url = url($baseUrl.$this->code);
         
         return $this->view('mails.sharetask')->with([
             'url' => $url
